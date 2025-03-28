@@ -76,3 +76,46 @@ databaseChangeLog:
               - column:
                   name:  country
                   type:  varchar(2)
+
+- changeSet:
+      id: 4
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Adding a new table for testing purposes
+      changes:
+        - createTable:
+            tableName: test_table
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+- changeSet:
+      id: 5
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Adding a new column to the company table
+      changes:
+        - addColumn:
+            tableName: company
+            columns:
+              - column:
+                  name: country
+                  type: varchar(2)
+                  constraints:
+                    nullable: true
