@@ -20,7 +20,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      GITHUB_ACTIONS_IAM_ROLE: arn:aws:iam::182571449491:role/github-rds-test-role
       SECRET_NAME: rds!cluster-7ad2c9f7-8dbb-47fe-9fe7-b13e4469d90d
+      DB_URL: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
 
     steps:
     - uses: actions/checkout@v3
@@ -28,16 +30,16 @@ jobs:
     - name: configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::182571449491:role/github-rds-test-role
+        role-to-assume: $GITHUB_ACTIONS_IAM_ROLE
         aws-region: us-east-1
 
     - name: Get database credentials
       id: secrets
-      run: |
-        SECRET=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
-        DB_PASSWORD=$(echo $SECRET | jq -r '.password')
-        echo "::add-mask::$DB_PASSWORD"
-        echo "db_password=$DB_PASSWORD" >> $GITHUB_OUTPUT
+      uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        secret-ids: $SECRET_NAME
+        parse-json-secrets: true
+        # 🔼 This creates environment variables for each secret (e.g. USERNAME and PASSWORD)
 
     - uses: liquibase-github-actions/update@v4.31.1
       with:
@@ -49,12 +51,12 @@ jobs:
         # The JDBC database connection URL
         # string
         # Required
-        url: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
+        url: $DB_URL
 
         # Password to use to connect to the database
         # string
         # Optional
-        password: steps.secrets.outputs.db_password
+        password: $PASSWORD
 
         # If set to true and any changeset in a deployment fails, then the update operation stops, and liquibase attempts to rollback all changesets just deployed. A changeset marked "fail-on-error=false" does not trigger as an error, therefore rollback-on-error will not occur. Additionally, if a changeset is not auto-rollback compliant or does not have a rollback script, then no rollback-on-error will occur for any changeset.
         # bool
@@ -74,4 +76,4 @@ jobs:
         # Username to use to connect to the database
         # string
         # Optional
-        username: "dbadmin"
+        username: $USERNAME
