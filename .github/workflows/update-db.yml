@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_ACTIONS_IAM_ROLE: arn:aws:iam::182571449491:role/github-rds-test-role
+      GITHUB_ACTIONS_IAM_ROLE: "arn:aws:iam::182571449491:role/github-rds-test-role"
       SECRET_NAME: rds!cluster-7ad2c9f7-8dbb-47fe-9fe7-b13e4469d90d
       DB_URL: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
 
