@@ -35,7 +35,7 @@ jobs:
         secret-ids: |
           DB, rds!cluster-7ad2c9f7-8dbb-47fe-9fe7-b13e4469d90d
         parse-json-secrets: true
-        # 🔼 This creates environment variables for each secret (e.g. USERNAME and PASSWORD)
+        # 🔼 This creates environment variables for each secret using provided prefix (e.g. DB_USERNAME and DB_PASSWORD)
 
     - name: run Liquibase update
       uses: liquibase-github-actions/update@v4.31.1
@@ -43,8 +43,8 @@ jobs:
         changelogFile: "../src/liquibase.properties"
 
         url: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
-        username: ${DB_USERNAME}
-        password: ${DB_PASSWORD}
+        username: ${{env.DB_USERNAME}}
+        password: ${{env.DB_PASSWORD}}
 
         # If set to true and any changeset in a deployment fails, then the update operation stops, and liquibase attempts to rollback all changesets just deployed. A changeset marked "fail-on-error=false" does not trigger as an error, therefore rollback-on-error will not occur. Additionally, if a changeset is not auto-rollback compliant or does not have a rollback script, then no rollback-on-error will occur for any changeset.
         # bool
