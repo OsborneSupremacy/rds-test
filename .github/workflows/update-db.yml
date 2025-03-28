@@ -19,6 +19,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      SECRET_NAME: rds!cluster-7ad2c9f7-8dbb-47fe-9fe7-b13e4469d90d
+
     steps:
     - uses: actions/checkout@v3
 
@@ -31,7 +34,7 @@ jobs:
     - name: Get database credentials
       id: secrets
       run: |
-        SECRET=$(aws secretsmanager get-secret-value --secret-id your-secret-name --query SecretString --output text)
+        SECRET=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
         DB_PASSWORD=$(echo $SECRET | jq -r '.password')
         echo "::add-mask::$DB_PASSWORD"
         echo "db_password=$DB_PASSWORD" >> $GITHUB_OUTPUT
