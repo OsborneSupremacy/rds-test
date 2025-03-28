@@ -127,7 +127,7 @@ databaseChangeLog:
       context: test-context
       comment: Adding an index to the person table
       changes:
-        - addIndex:
+        - createIndex:
             tableName: person
             indexName: idx_person_name
             columns:
