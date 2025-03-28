@@ -119,3 +119,27 @@ databaseChangeLog:
                   type: varchar(2)
                   constraints:
                     nullable: true
+
+- changeSet:
+      id: 6
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Adding an index to the person table
+      changes:
+        - addIndex:
+            tableName: person
+            indexName: idx_person_name
+            columns:
+              - column:
+                  name: name
+
+- changeSet:
+      id: 7
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Dropping the test_table
+      changes:
+        - dropTable:
+            tableName: test_table
