@@ -143,3 +143,30 @@ databaseChangeLog:
       changes:
         - dropTable:
             tableName: test_table
+
+- changeSet:
+      id: 8
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Renaming the column 'address1' to 'primary_address' in the company table
+      changes:
+        - renameColumn:
+            tableName: company
+            oldColumnName: address1
+            newColumnName: primary_address
+            columnDataType: varchar(50)
+
+- changeSet:
+      id: 9
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Adding a foreign key constraint between person and company tables
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: person
+            baseColumnNames: company_id
+            referencedTableName: company
+            referencedColumnNames: id
+            constraintName: fk_person_company
