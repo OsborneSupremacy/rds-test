@@ -157,3 +157,31 @@ databaseChangeLog:
             newColumnName: primary_address
             columnDataType: varchar(50)
 
+- changeSet:
+      id: 9
+      author: test.dev
+      labels: test-label
+      context: test-context
+      comment: Adding a new table for orders
+      tag: v1.0
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: int
+                  constraints:
+                    nullable: false
