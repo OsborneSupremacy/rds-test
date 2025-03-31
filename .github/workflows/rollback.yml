@@ -1,13 +1,12 @@
 name: Liquibase Update
 
 on:
-  push:
-    branches:
-      - main
-
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      rollback-tag:
+        description: 'Rollback to a specific tag'
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -39,37 +38,14 @@ jobs:
         parse-json-secrets: true
         # 🔼 This creates environment variables for each secret using provided prefix (e.g. DB_USERNAME and DB_PASSWORD)
 
-    - name: run Liquibase validate
-      uses: liquibase-github-actions/validate@v4.31.1
+    - name: run Liquibase rollback
+      uses: liquibase-github-actions/rollback@v4.31.1
       with:
           changelogFile: "src/db-changelog.yaml"
+          tag: ${{ github.event.inputs.rollback-tag }}
           url: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
           username: ${{env.DB_USERNAME}}
           password: ${{env.DB_PASSWORD}}
 
-    - name: run Liquibase status
-      uses: liquibase-github-actions/status@v4.31.1
-      with:
-        changelogFile: "src/db-changelog.yaml"
-        url: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
-        username: ${{env.DB_USERNAME}}
-        password: ${{env.DB_PASSWORD}}
 
-    - name: run Liquibase update-sql
-      uses: liquibase-github-actions/update-sql@v4.31.1
-      with:
-          changelogFile: "src/db-changelog.yaml"
-          url: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
-          username: ${{env.DB_USERNAME}}
-          password: ${{env.DB_PASSWORD}}
-
-    - name: run Liquibase update
-      uses: liquibase-github-actions/update@v4.31.1
-      with:
-        changelogFile: "src/db-changelog.yaml"
-        url: "jdbc:postgresql://testdb-instance-1.cpggu2uyg5g0.us-east-1.rds.amazonaws.com:5432/postgres"
-        username: ${{env.DB_USERNAME}}
-        password: ${{env.DB_PASSWORD}}
-        showSummary: "verbose"
-        showSummaryOutput: "all"
 
