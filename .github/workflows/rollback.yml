@@ -1,4 +1,4 @@
-name: Liquibase Update
+name: Liquibase Rollback
 
 on:
   workflow_dispatch:
